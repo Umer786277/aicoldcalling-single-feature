@@ -1,0 +1,138 @@
+{% extends "vertical_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {% if call_result.error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ call_result.error }}
+                </div>
+            {% endif %}
+    
+            {% if summary or analytics or lead_converted is not None %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Overview</h3>
+                        
+                        <div class="row text-center mb-4">
+                            <div class="col-md-4">
+                                <div class="p-3 border bg-dark rounded">
+                                    <h5 class="text-white">Total Minutes</h5>
+                                    <p class="text-white">{{ analytics.duration }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border bg-dark rounded">
+                                    <h5 class="text-white"> Call Cost</h5>
+                                    <p class="text-white">{{ analytics.cost }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border bg-dark rounded">
+                                    <h5 class="text-white">Call Status</h5>
+                                    <p class="text-white">{{ analytics.status }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if summary %}
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h3 class="card-title">Call Summary</h3>
+                                    <p class="card-text">{{ summary }}</p>
+                                    {% if summary_insights %}
+                                        <div class="mt-3">
+                                            <h5>Insights</h5>
+                                            <ul class="list-unstyled">
+                                                {% for insight in summary_insights %}
+                                                    <li>{{ insight }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <canvas id="analyticsChart" width="400" height="200"></canvas>
+
+                        {% if lead_converted is not None %}
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h3 class="card-title">Lead Generation Status</h3>
+                                    {% if lead_converted == '1' %}
+                                        <p class="card-text">Lead was successfully converted.</p>
+                                    {% elif lead_converted == '0' %}
+                                        <p class="card-text">Lead was not converted.</p>
+                                    {% else %}
+                                        <p class="card-text">Lead conversion status could not be determined.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h3 class="card-title">Lead Generation Status</h3>
+                                    <p class="card-text">No lead generation status available.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Ensure analytics data is available before using it
+        var analytics = {
+            duration: {{ analytics.duration|default:0 }},
+            call_count: {{ analytics.call_count|default:0 }},
+            total_spent: {{ analytics.total_spent|default:0 }}
+        };
+
+        var analyticsData = {
+            labels: ["Total Minutes", "Total Call Count", "Total Spent"],
+            datasets: [{
+                label: 'Analytics',
+                data: [
+                    analytics.duration,
+                    analytics.call_count,
+                    analytics.total_spent
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var analyticsOptions = {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        };
+
+        var ctx = document.getElementById('analyticsChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: analyticsData,
+            options: analyticsOptions
+        });
+    });
+</script>
+{% endblock %}
