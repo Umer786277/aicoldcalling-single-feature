@@ -1,27 +1,12 @@
-FROM python:3
+FROM python:3.12-slim
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y \
-        gcc \
-        libc-dev \
-        make \
-        libffi-dev \
-        libssl-dev \
-        libxml2-dev \
-        libxslt-dev \
-        build-essential \
-        python3-dev \
-        python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y default-libmysqlclient-dev build-essential && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY requirements.txt requirements.txt
+COPY . /app
 
-# Upgrade pip and install requirements
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
