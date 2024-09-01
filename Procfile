@@ -1,0 +1,1 @@
+web: gunicorn aicoldcallingapp.wsgi --log-file -
