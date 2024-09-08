@@ -98,16 +98,12 @@ Logging
 
 **How to run**
 
-Clone this repo, head to the root directory, and create a Python Virtual Environment. Then,
+**Clone this repo, head to the root directory, and create a Python Virtual Environment. Then,**
 
- pip install -r requirements.txt
-Open 2 different Terminals, from the root folder On first Terminal
+ **pip install -r requirements.txt**
+Open Terminal, from the root folder
 
-cd backend
-python app.py
-And on another one
+cd aicoldcallingapp
+python manage.py runserver
 
-cd frontend
-npm install
-npm start
-After this your web application should run on the local host and after capturing the photo it should automatically detect your facial features and on submit, it should redirect to the recommended products page.
+**Visit http://127.0.0.1:8000/ or http://localhost:8000**
