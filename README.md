@@ -5,9 +5,13 @@ The Campaigns functionality allows users to create and manage calling campaigns 
 
 **Features**
 •	Create Campaign: Users can create new calling campaigns by specifying the campaign name, the number of target leads, the category of leads, and the call-to-action.
+
 •	Lead Filtering: The system filters leads based on the specified category and initiates calls to valid phone numbers.
+
 •	Automated Calling: The system automatically initiates calls using the VAPI API, handles the conversation, and logs the results.
+
 •	Call Logging: All calls are logged in the database with detailed information, including call summary, analytics, and whether the lead was converted.
+
 •	Campaign Management: Users can view a list of all campaigns and their details.
 
 
